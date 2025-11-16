@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>I have something to tell you.</title>
+
+  <style>
+    /* the part that will "crash" */
+    #pageContent {
+      text-align: center;
+      padding-top: 30px;
+      font-family: Arial, sans-serif;
+      transition: opacity 1.5s ease;
+    }
+
+    h1 { color: #333; }
+
+    button {
+      background-color: #EF6CAD;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      margin: 10px;
+      font-size: 18px;
+    }
+    button:hover { background-color: #E9358F; }
+
+    img {
+      margin-top: 20px;
+      width: 300px;
+    }
+
+    /* Flashes, glitch layers */
+    .glitchLayer {
+      pointer-events: none;
+      position: fixed;
+      inset: 0;
+      opacity: 0;
+      z-index: 9999;
+      background-size: cover;
+      mix-blend-mode: screen;
+    }
+
+    #glitch1 { background: url("https://i.imgur.com/7V9ZQ9s.png"); }
+    #glitch2 { background: url("https://i.imgur.com/o5uMfKo.png"); }
+    #glitch3 { background: url("https://i.imgur.com/AKX0DHE.png"); }
+
+    #staticFlash { background: white; transition: opacity 0.1s; }
+    #whiteFlash { background: white; transition: opacity 0.4s; }
+
+    #scanlineCollapse {
+      position: fixed;
+      left: 0; top: 50%;
+      width: 100%;
+      height: 0px;
+      background: black;
+      z-index: 9998;
+      opacity: 0;
+    }
+
+    /* FINAL MESSAGE – OUTSIDE fading area */
+    #crashMessage {
+      position: fixed;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      background: white;
+      padding: 30px 40px;
+      border-radius: 12px;
+      box-shadow: 0 0 30px rgba(0,0,0,0.5);
+      font-size: 24px;
+      display: none;
+      z-index: 10001;
+      text-align: center;
+      animation: fadeIn 2s ease forwards;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translate(-50%, -60%); }
+      to   { opacity: 1; transform: translate(-50%, -50%); }
+    }
+
+    @keyframes shake {
+      0% { transform: translate(0, 0); }
+      20% { transform: translate(-20px, 15px); }
+      40% { transform: translate(18px, -12px); }
+      60% { transform: translate(-15px, 20px); }
+      80% { transform: translate(12px, -18px); }
+      100% { transform: translate(0, 0); }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Everything that will fade out -->
+  <div id="pageContent">
+    <h1>I have something i must tell you</h1>
+    <img id="monImage" src="chat.jpeg" alt="Image">
+    <br>
+    <button onclick="devoilerSecret()">click here if you wanna know</button>
+  </div>
+
+  <!-- Glitches + effects -->
+  <div id="glitch1" class="glitchLayer"></div>
+  <div id="glitch2" class="glitchLayer"></div>
+  <div id="glitch3" class="glitchLayer"></div>
+  <div id="staticFlash" class="glitchLayer"></div>
+  <div id="whiteFlash" class="glitchLayer"></div>
+  <div id="scanlineCollapse"></div>
+
+  <!-- Final message (NOT faded out) -->
+  <div id="crashMessage">
+    im crashing out, sorry...<br>
+    i never thought that i would actually send that to you<br><br>
+    <button onclick="closePage()">OK</button>
+  </div>
+
+  <!-- Confetti -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+  <script>
+    function devoilerSecret() {
+      alert("I just want to tell you that i really apreciate you. you are the sweetest, funniest and the most cute person i met. I never thought that i would learn to code only for that, and i would never thought that i would actually fall in love... That's kind of cringe sorry...");
+
+      document.getElementById("monImage").src = "chien.jpeg";
+
+      confetti({ particleCount: 150, spread: 100, origin: { y: 0.6 } });
+
+      const page = document.getElementById("pageContent");
+
+      const g1 = document.getElementById("glitch1");
+      const g2 = document.getElementById("glitch2");
+      const g3 = document.getElementById("glitch3");
+      const flash = document.getElementById("staticFlash");
+      const white = document.getElementById("whiteFlash");
+      const scan = document.getElementById("scanlineCollapse");
+      const msg = document.getElementById("crashMessage");
+
+      /* glitch madness */
+      page.style.filter = "contrast(300%) saturate(350%) hue-rotate(90deg) blur(1px)";
+      page.style.animation = "shake 1.2s infinite";
+
+      setTimeout(() => g1.style.opacity = "0.6", 100);
+      setTimeout(() => g2.style.opacity = "0.5", 250);
+      setTimeout(() => g3.style.opacity = "0.7", 400);
+
+      setTimeout(() => {
+        g1.style.opacity = "0";
+        g2.style.opacity = "0";
+        g3.style.opacity = "0";
+      }, 750);
+
+      setTimeout(() => flash.style.opacity = "1", 200);
+      setTimeout(() => flash.style.opacity = "0", 350);
+      setTimeout(() => flash.style.opacity = "1", 500);
+      setTimeout(() => flash.style.opacity = "0", 650);
+
+      setTimeout(() => white.style.opacity = "1", 900);
+      setTimeout(() => white.style.opacity = "0", 1200);
+
+      setTimeout(() => {
+        scan.style.opacity = "1";
+        scan.style.transition = "height 1.2s ease";
+        scan.style.height = "100%";
+      }, 1300);
+
+      setTimeout(() => {
+        page.style.opacity = "0";
+        page.style.animation = "none";
+      }, 1600);
+
+      setTimeout(() => {
+        msg.style.display = "block";
+      }, 2700);
+    }
+
+    function closePage() {
+      window.close();
+      window.location.href = "about:blank";
+    }
+  </script>
+
+</body>
+</html>
